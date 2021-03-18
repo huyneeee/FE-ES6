@@ -1,0 +1,88 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "FRANKIE SWEATSHIRT",
+      "image": "image/01_2_1.jpg",
+      "price": "849.00",
+      "status": false,
+      "quantity": 82
+    },
+    {
+      "id": "2",
+      "name": "HOLLISTER BACKYARD SWEATSHIRT",
+      "image": "image/02_1_1.jpg",
+      "price": "49.00",
+      "status": false,
+      "quantity": 10
+    },
+    {
+      "id": "3",
+      "name": "ABOMINABLE HOODIE",
+      "image": "image/08_1_2.jpg",
+      "price": "34.00",
+      "status": false,
+      "quantity": 19
+    },
+    {
+      "id": "4",
+      "name": "BEAUMONT SUMMIT KIT",
+      "image": "image/03_1.jpg",
+      "price": "84.00",
+      "status": false,
+      "quantity": 11
+    },
+    {
+      "id": "5",
+      "name": "PROTEUS FITNESS JACKSHIRT",
+      "image": "image/22_5.jpg",
+      "price": "86.00",
+      "status": false,
+      "quantity": 21
+    },
+    {
+      "id": "6",
+      "name": "GOBI HEATTEC® TEEE",
+      "image": "image/11_1_6.jpg",
+      "price": "100.00",
+      "status": false,
+      "quantity": 28
+    },
+    {
+      "id": "7",
+      "name": "WATTER JACKET",
+      "image": "image/20_3.jpg",
+      "price": "30.00",
+      "status": false,
+      "quantity": 22
+    },
+    {
+      "id": "8",
+      "name": "MARS HEATTECH™ PULLOVER",
+      "image": "image/06_1_1.jpg",
+      "price": "92.00",
+      "status": false,
+      "quantity": 201
+    }
+  ],
+  "category": [
+    {
+      "id": "1",
+      "name": "CLOCKS",
+      "image": "image/banner-home7-3.png",
+      "description": "It is a long established fact that a reader will"
+    },
+    {
+      "id": "2",
+      "name": "CHAIRS",
+      "image": "image/banner-home7-2_-_Copy.png",
+      "description": "The 1958 moulded plywood armchair by Norman Chermer"
+    },
+    {
+      "id": "3",
+      "name": "NEW LIGHTS",
+      "image": "image/banner-home7-1_-_Copy.png",
+      "description": "It is a long established fact that a reader will"
+    }
+  ]
+}

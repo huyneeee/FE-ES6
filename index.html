@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOPFAKE</title>
+    <link rel="shortcut icon" type="image/png" href="https://scontent.fhan5-2.fna.fbcdn.net/v/t1.15752-9/157204149_456622768810711_5007133967910235345_n.png?_nc_cat=102&ccb=3&_nc_sid=ae9488&_nc_ohc=WgFW1DPdk-8AX-OE2uv&_nc_ht=scontent.fhan5-2.fna&oh=2cd3eb17ab31bf94b699ffd9bae43c50&oe=6065A520">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+    <style>
+        circle:nth-of-type(1) { fill: #ffffff; }
+        circle:nth-of-type(2) { fill: #fcd837; }
+        circle:nth-of-type(3) { fill: #f9a11f; }
+        circle:nth-of-type(4) { fill: #f27c21; }
+
+        #clackers {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div id="loading"class="w-screen h-screen bg-gray-900 z-30">
+        <svg width="300" height="120" class="absolute" id="clackers">
+            <!-- Left arc path -->
+            <svg>
+              <path id="arc-left-up" fill="none" d="M 90 90 A 90 90 0 0 1 0 0"/>
+            </svg>
+            <!-- Right arc path -->
+            <svg>
+              <path id="arc-right-up" fill="none" d="M 100 90 A 90 90 0 0 0 190 0"/>
+            </svg>
+            
+            <text x="150" y="50" fill="#ffffff" font-family="Helvetica Neue,Helvetica,Arial" font-size="18"
+                  text-anchor="middle">
+              L O A D I N G
+            </text>
+            <circle cx="15" cy="15" r="15">
+              <!-- I used a python script to calculate the keyPoints and keyTimes based on a quadratic function. -->
+              <animateMotion dur="1.5s" repeatCount="indefinite"
+                calcMode="linear"
+                keyPoints="0.0;0.19;0.36;0.51;0.64;0.75;0.84;0.91;0.96;0.99;1.0;0.99;0.96;0.91;0.84;0.75;0.64;0.51;0.36;0.19;0.0;0.0;0.05;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0"
+                keyTimes="0.0;0.025;0.05;0.075;0.1;0.125;0.15;0.175;0.2;0.225;0.25;0.275;0.3;0.325;0.35;0.375;0.4;0.425;0.45;0.475;0.5;0.525;0.55;0.575;0.6;0.625;0.65;0.675;0.7;0.725;0.75;0.775;0.8;0.825;0.85;0.875;0.9;0.925;0.95;0.975;1.0">
+                <mpath xlink:href="#arc-left-up"/>
+              </animateMotion>
+            </circle>
+            <circle cx="135" cy="105" r="15" />
+            <circle cx="165" cy="105" r="15" />
+            <circle cx="95" cy="15" r="15">
+              <animateMotion dur="1.5s" repeatCount="indefinite"
+                calcMode="linear"
+                keyPoints="0.0;0.0;0.05;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0.0;0.19;0.36;0.51;0.64;0.75;0.84;0.91;0.96;0.99;1.0;0.99;0.96;0.91;0.84;0.75;0.64;0.51;0.36;0.19;0.0"
+                keyTimes="0.0;0.025;0.05;0.075;0.1;0.125;0.15;0.175;0.2;0.225;0.25;0.275;0.3;0.325;0.35;0.375;0.4;0.425;0.45;0.475;0.5;0.525;0.55;0.575;0.6;0.625;0.65;0.675;0.7;0.725;0.75;0.775;0.8;0.825;0.85;0.875;0.9;0.925;0.95;0.975;1.0">
+                <mpath xlink:href="#arc-right-up"/>
+              </animateMotion>
+            </circle>
+          </svg>
+    </div>
+    <div class="container mx-auto hidden ">
+        <!-- content   -->
+        <div id="main-content" >
+        </div>
+        <!-- modal add cart  -->
+        <div class="w-62 h-auto px-5 py-5 bg-white rounded fixed right-1/3 top-1/3 z-20 hidden border border-gray-400"id="modal_add_cart">
+          <div class="relative">
+            <button id="delete_modal_cart" class="absolute -top-7 -right-7 focus:outline-none"><i class="far fa-times-circle text-2xl"></i></button>
+            <p class="text-md font-semibold mb-4">You added <span class="font-semibold" id="name_product_add_cart_modal"></span> to your shopping cart</p>
+            <div class="flex flex-col w-full h-auto">
+              <div class="flex justify-center my-3">
+                <button class="px-3 py-2 bg-gray-900 text-white text-sm font-normal" id="continue_shopping">Continue Shopping</button>
+              </div>
+              <div class="flex justify-center ">
+                <button class="px-3 py-2 bg-gray-900 text-white text-sm font-normal"id="view_cart">View Cart & CheckOut</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <script>
+       const loading = document.querySelector('#loading');
+       const container = document.querySelector('.container');
+       window.addEventListener('load',()=>{
+           setTimeout(()=>{
+            loading.parentElement.removeChild(loading);
+            container.classList.remove('hidden');
+           },3000);    
+       }); 
+    </script>
+    <script src="main.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyAFsIKOF5rbEJqBXU9xYxBX8svvcBEQdVo",
+        authDomain: "shop-ff2b2.firebaseapp.com",
+        projectId: "shop-ff2b2",
+        storageBucket: "shop-ff2b2.appspot.com",
+        messagingSenderId: "804386995661",
+        appId: "1:804386995661:web:a4a2dcbb66dae262ce5884"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    </script>
+</body>
+</html>
