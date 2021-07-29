@@ -6,14 +6,16 @@ import FooterHome from '../../components/web/FooterHome.js';
 import { $ } from '../../utils.js';
 import { add_cart } from '../../cart.js';
 import ProductApi from '../../api/ProductApi.js';
+import BlogApi from '../../api/BlogApi.js';
 
 const HomePage = {
     async render() {
         return `
+        
         ${HeaderHome.render()}
         <!-- banner  -->
         <div class="bg-cover bg-center w-full relative"
-            style="background-image: url(image/slider-home2_1.png); height: 35rem;">
+            style="background-image: url(https://firebasestorage.googleapis.com/v0/b/shop-ff2b2.appspot.com/o/images%2Fslider-home2_1.png?alt=media&token=0be14b5d-397d-4dfe-a718-ab17bfb43241); height: 35rem;">
             <div class="absolute  top-1/3 left-1/4">
                 <p class="text-4xl font-bold uppercase ">c l e a r a n c e</p>
                 <p class="uppercase text-2xl font-mormal text-gray-800 pb-1">Giver a timeless classic a home</p>
@@ -56,7 +58,7 @@ const HomePage = {
         <!-- sale  -->
         <div class=" w-full flex px-24 relative" style="height:650px;background-color:#f6f6f6">
             <div class=" w-1/3 h-full box-border py-40 ">
-                <div class="bg-cover bg-center w-full h-full  " style="background-image: url(image/01_2_1.jpg)"></div>
+                <div class="bg-cover bg-center w-full h-full  " style="background-image: url(https://firebasestorage.googleapis.com/v0/b/shop-ff2b2.appspot.com/o/images%2F02_1_1.jpg?alt=media&token=01163e4c-94ea-4923-90ea-fd6fb1cbadd9)"></div>
             </div>
             <div class=" h-full w-2/3  relative">
                 <div class="absolute top-56 left-56">
@@ -91,8 +93,6 @@ const HomePage = {
         await HeaderHome.afterRender();
         //add-cart
         add_cart(HomePage);
-       
-        
     }
 }
 export default HomePage;

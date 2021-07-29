@@ -11,4 +11,7 @@ export default class Error404Page {
     </div>
         `
     }
+    afterRender(){
+
+    }
 }

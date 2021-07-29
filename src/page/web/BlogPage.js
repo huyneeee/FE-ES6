@@ -23,8 +23,8 @@ const BlogPage  = {
                         style="background-image: url('${blog.image}');">
                     </div>
                     <div class="text-left mt-5">
-                        <a href="#/blogs/${blog.id}" class="text-md font-semibold uppercase ">${blog.name}</a>
-                        <p class="italic text-gray-400 text-sm mt-3"><i class="fas fa-calendar-alt"></i> ${blog.date_post}</p>
+                        <a href="#/blog/${blog._id}" class="text-md font-semibold uppercase ">${blog.name}</a>
+                        <p class="italic text-gray-400 text-sm mt-3"><i class="fas fa-calendar-alt"></i> ${blog.createdAt ? blog.createdAt.slice(0,10) : ''}</p>
                         <p class="text-gray-400 font-xs mt-4">${blog.content}</p>
                     </div>
 

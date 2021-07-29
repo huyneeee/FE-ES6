@@ -8,7 +8,7 @@ export const up_cart =(currentpage)=>{
             btns_up_qty.forEach(btn_up_qty=>{
                 const id = btn_up_qty.dataset.id;
                 btn_up_qty.onclick=async ()=>{   
-                    const find_id=arr_product_cart.findIndex(ele=>ele.id==id); 
+                    const find_id=arr_product_cart.findIndex(ele=>ele._id==id); 
                     const sl=arr_product_cart[find_id].sl;
                     const object_product={...arr_product_cart[find_id],sl:sl+1};
                     arr_product_cart.splice(find_id,1,object_product);
@@ -20,7 +20,7 @@ export const up_cart =(currentpage)=>{
             
             btns_up_qty.onclick=async ()=>{   
                 const id = btns_up_qty.dataset.id;
-                const find_id=arr_product_cart.findIndex(ele=>ele.id==id); 
+                const find_id=arr_product_cart.findIndex(ele=>ele._id==id); 
                 const sl=arr_product_cart[find_id].sl;
                 const object_product={...arr_product_cart[find_id],sl:sl+1};
                 arr_product_cart.splice(find_id,1,object_product);
@@ -38,7 +38,7 @@ export const down_cart = (currentpage)=>{
         btns_down_qty.forEach(btn_down_qty=>{
             const id = btn_down_qty.dataset.id;
             btn_down_qty.onclick=async ()=>{
-                const find_id=arr_product_cart.findIndex(ele=>ele.id==id); 
+                const find_id=arr_product_cart.findIndex(ele=>ele._id==id); 
                 const sl=arr_product_cart[find_id].sl;
                 if(sl>1){
                     const object_product={...arr_product_cart[find_id],sl:sl-1};
@@ -52,7 +52,7 @@ export const down_cart = (currentpage)=>{
         
         btns_down_qty.onclick=async ()=>{
             const id = btns_down_qty.dataset.id;
-            const find_id=arr_product_cart.findIndex(ele=>ele.id==id); 
+            const find_id=arr_product_cart.findIndex(ele=>ele._id==id); 
             const sl=arr_product_cart[find_id].sl;
             if(sl>1){
                 const object_product={...arr_product_cart[find_id],sl:sl-1};

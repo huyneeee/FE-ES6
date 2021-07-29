@@ -9,15 +9,18 @@ const ProductsPage = {
     async render() {
         const request = parseRequestUrl();
         const current_page = request.resource.substr(-1,1);
-        const { data: total } = await ProductApi.getAll();
+        const { data: total } = await ProductApi.countProduct();
+
         const row_per_page = 6; // số bản ghi trên 1 trang
-        const total_page =Math.ceil(total.length/row_per_page); //tính số lượng trang
+        const total_page =Math.ceil(total/row_per_page); //tính số lượng trang
         // tạo mảng index pagintion
         const arr_index_page=[];
         for(let i = 0; i < total_page;i++){
             arr_index_page.push(i);
         }
-        const { data: products } = await ProductApi.getProductPaginate(current_page ? current_page : '1',row_per_page);
+        
+        const { data: products } = await ProductApi.getProductPagination(current_page ? current_page : '1');
+
         return `
                 ${HeaderHome.render()}
                 ${Navigation.render()}
@@ -48,7 +51,7 @@ const ProductsPage = {
                     ${products.map(product => {
                     return `
                     <div class=" h-auto group overflow-hidden">
-                    <a href="#/products/${product.id}">
+                    <a href="#/product/${product._id}">
                     <div class=" w-full h-96 bg-gray-500 bg-no-repeat bg-cover bg-center  "
                           style="background-image: url('${product.image}');">
                       </div>
@@ -57,7 +60,7 @@ const ProductsPage = {
                       <a  class="text-md font-normal uppercase text-gray-500 ">${product.name}</a>    
                           <div class="flex mt-3">
                                   <div class="flex-1">
-                                  <button class="border-b-2 border-black font-bold  text-sm add-to-cart focus:outline-none transform -translate-x-32 group-hover:translate-x-20 transition-all duration-500" data-id="${product.id}">ADD TO CARD</button>
+                                  <button class="border-b-2 border-black font-bold  text-sm add-to-cart focus:outline-none transform -translate-x-32 group-hover:translate-x-20 transition-all duration-500" data-id="${product._id}">ADD TO CARD</button>
                                   </div>
                                   <div class="flex-1">
                                   <p class="font-extrabold text-md transform -translate-x-16 group-hover:translate-x-40 transition-all duration-500">$${product.price}</p>
@@ -72,8 +75,8 @@ const ProductsPage = {
                   <div class="flex h-16 w-full  justify-start items-center mt-5">
                     ${arr_index_page.map(ele=>{
                         return `
-                            <div class="w-10 h-10 bg-gray-400  hover:bg-gray-900  hover:text-white  text-white  justify-center items-center flex mr-4">
-                            <span><a href="/#/products&page=${ele+1}">${ele+1}</a></span>
+                            <div class="w-10 h-10  ${current_page==ele+1 ? 'bg-black' : 'bg-gray-400'} hover:bg-gray-900  hover:text-white  text-white  justify-center items-center flex mr-4">
+                            <span><a href="/#/products?page=${ele+1}">${ele+1}</a></span>
                         </div>
                         `
                     }).join('')}

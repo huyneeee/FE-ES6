@@ -1,8 +1,8 @@
-import { reRender, $ , parseRequestUrl } from '../../utils.js';
+import { reRender, $, parseRequestUrl } from '../../utils.js';
 import CategoryApi from '../../api/CategoryApi.js';
 import Sidebar from '../../components/admin/SideBar.js';
 import ListCategory from '../../components/admin/ListCategory';
-import { validateEmpty,validateFileImage, setError,setSuccess} from '../../validation';
+import { validateEmpty, validateFileImage, setError, setSuccess } from '../../validation';
 const EditUserPage = {
     async render() /*html*/ {
         const { id } = parseRequestUrl();
@@ -69,65 +69,75 @@ const EditUserPage = {
     }
     ,
     async afterRender() {
-        const name_category=$('#name_category');
-        const description=$('#description');
-        const inputNameCate =name_category.onchange= ()=>{
-            if(validateEmpty(name_category.value)){
-                setError(name_category,'Không được để trống!');
-            }else{
+        const { id } = parseRequestUrl();
+        const name_category = $('#name_category');
+        const description = $('#description');
+        const { _id: userId, role } = JSON.parse(localStorage.getItem('user'));
+        const inputNameCate = name_category.onchange = () => {
+            if (validateEmpty(name_category.value)) {
+                setError(name_category, 'Không được để trống!');
+            } else {
                 setSuccess(name_category);
                 return true;
             }
         }
-        const inputDescription = description.onchange= ()=>{
-            if(validateEmpty(description.value)){
-                setError(description,'Không được để trống!');
-            }else{
+        const inputDescription = description.onchange = () => {
+            if (validateEmpty(description.value)) {
+                setError(description, 'Không được để trống!');
+            } else {
                 setSuccess(description);
                 return true;
             }
         }
-        $('#form-edit-category').addEventListener('submit',async e => {
+        $('#form-edit-category').addEventListener('submit', async e => {
             e.preventDefault();
-            if(inputNameCate()==true&&inputDescription()==true){
+            if (inputNameCate() == true && inputDescription() == true) {
                 let image_category = $('#image_category').files[0];
 
-                if(image_category){
-                    if(validateFileImage(image_category)==true){
+                if (image_category) {
+                    if (validateFileImage(image_category) == true) {
                         setSuccess($('#image_category'));
-                        let storageRef =  firebase.storage().ref(`images/${image_category.name}`);
-                        storageRef.put(image_category).then(function(){
-                            storageRef.getDownloadURL().then(async (url)=>{
-                                    const category = {
-                                    id:$('#id_category').value,
-                                    name:$('#name_category').value,
-                                    image:url,
-                                    description:$('#description').value,
-                                    }
-                                    const { id } = parseRequestUrl();
-                                    if(CategoryApi.edit(id,category)){
-                                        alert('Sửa danh mục thành công');
-                                        window.location.hash='#/listcategory';
-                                        await reRender(ListCategory,'#list-category');
-                                    }
+                        let storageRef = firebase.storage().ref(`images/${image_category.name}`);
+                        storageRef.put(image_category).then(function () {
+                            storageRef.getDownloadURL().then(async (url) => {
+                                const category = {
+                                    name: $('#name_category').value,
+                                    image: url,
+                                    description: $('#description').value,
+                                }
+
+                                // check quyen
+                                try {
+                                    await CategoryApi.edit(id, category, userId);
+                                    alert('Sửa danh mục thành công');
+                                    window.location.hash = '#/listcategory';
+                                    await reRender(ListCategory, '#list-category');
+                                } catch (err) {
+                                    alert(`${err.response.data.error}`);
+
+                                }
+
                             })
                         })
-                    }else{
-                        setError($('#image_category'),'File không đúng định dạng!');
+                    } else {
+                        setError($('#image_category'), 'File không đúng định dạng!');
                     }
-                }else{
+                } else {
                     const category = {
-                        id:$('#id_category').value,
-                        name:$('#name_category').value,
-                        image:$('#old_image').value,
-                        description:$('#description').value,
-                        }
-                        const { id } = parseRequestUrl();
-                        if(CategoryApi.edit(id,category)){
-                            alert('Sửa danh mục thành công');
-                            window.location.hash='#/listcategory';
-                            await reRender(ListCategory,'#list-category');
-                        }
+                        name: $('#name_category').value,
+                        image: $('#old_image').value,
+                        description: $('#description').value,
+                    }
+                    // check quyen
+                    try {
+                        await CategoryApi.edit(id, category, userId);
+                        alert('Sửa danh mục thành công');
+                        window.location.hash = '#/listcategory';
+                        await reRender(ListCategory, '#list-category');
+                    } catch (err) {
+                        alert(`${err.response.data.error}`);
+
+                    }
                 }
             }
 

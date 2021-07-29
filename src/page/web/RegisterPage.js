@@ -4,6 +4,7 @@ import UserApi from '../../api/UserApi.js';
 import FooterHome from '../../components/web/FooterHome.js';
 import Navigation from '../../components/web/Navigation';
 import { validateEmail,validateEmpty,validateUserValid,validatePassword ,setError,setSuccess,validateUserText} from '../../validation';
+import AuthApi from '../../api/AuthApi.js';
 const RegisterPage = {
     async render(){
         const { data: users } = await UserApi.getAll();
@@ -16,15 +17,20 @@ const RegisterPage = {
             <div class="flex flex-col  w-2/5">
                 <form action="" class="border border-gray-300 rounded shadow-xl px-5 py-3 " id="form-register">
                     <input type="hidden" id="id" value="${newid}">
-                    
                     <div class="flex px-4 py-3">
-                        <p class="w-1/4 text-gray-500 text-sm">User Name <span class="text-red-600 font-bold">*</span> </p>
-                        <div class="w-3/4 relative">
-                            <input type="text" id="username" class="w-full py-2  px-4 border border-gray-300 rounded">
-                            <span class="err absolute right-3 top-3 text-xs "></span>
-                        </div>
+                    <p class="w-1/4 text-gray-500 text-sm">Name <span class="text-red-600 font-bold">*</span> </p>
+                    <div class="w-3/4 relative">
+                        <input type="text" id="name" class="w-full py-2  px-4 border border-gray-300 rounded">
+                        <span class="err absolute right-3 top-3 text-xs "></span>
                     </div>
-                    
+                </div>
+                    <div class="flex px-4 py-3">
+                    <p class="w-1/4 text-gray-500 text-sm">Email <span class="text-red-600 font-bold">*</span> </p>
+                    <div class="w-3/4 relative">
+                        <input type="text" id="email" class="w-full py-2  px-4 border border-gray-300 rounded">
+                        <span class="err absolute right-3 top-3 text-xs "></span>
+                    </div>
+                </div>
                     <div class="flex px-4 py-3">
                         <p class="w-1/4 text-gray-500 text-sm">Password<span class="text-red-600 font-bold">*</span> </p>
                         <div class="w-3/4 relative">
@@ -41,21 +47,8 @@ const RegisterPage = {
                         </div>
                     </div>
 
-                    <div class="flex px-4 py-3">
-                        <p class="w-1/4 text-gray-500 text-sm">Name <span class="text-red-600 font-bold">*</span> </p>
-                        <div class="w-3/4 relative">
-                            <input type="text" id="name" class="w-full py-2  px-4 border border-gray-300 rounded">
-                            <span class="err absolute right-3 top-3 text-xs "></span>
-                        </div>
-                    </div>
+                   
                 
-                    <div class="flex px-4 py-3">
-                        <p class="w-1/4 text-gray-500 text-sm">Email <span class="text-red-600 font-bold">*</span> </p>
-                        <div class="w-3/4 relative">
-                            <input type="text" id="email" class="w-full py-2  px-4 border border-gray-300 rounded">
-                            <span class="err absolute right-3 top-3 text-xs "></span>
-                        </div>
-                    </div>
 
                     
                     <div class="flex justify-between items-center mt-10">
@@ -69,30 +62,11 @@ const RegisterPage = {
         `
     },
     async afterRender(){
-        const username=$('#username');
         const email=$('#email');
         const password=$('#password');
         const password2=$('#password2');
         const name=$('#name');
-        const validateUsername=username.onchange=async ()=>{
-             //username
-             if(validateEmpty(username.value)){
-                setError(username,'Không được để trống!');
-            }else{
-                if(await validateUserValid(username)==true){
-                    if(validateUserText(username.value)==true){
-                        setSuccess(username);
-                        return true;
-                    }else{
-                        setError(username,'Username không đúng định dạng!');
-                    }
-                    
-                }else{
-                    setError(username,'Username đã tồn tại!');
-                }
-                
-            }
-        }
+
         const validateInputPass=password.onchange=()=>{
                 //password
                 if(validateEmpty(password.value)){
@@ -143,22 +117,19 @@ const RegisterPage = {
         }
         $('#form-register').addEventListener('submit',async e => {
             e.preventDefault();
-            const { data : users } = await UserApi.getAll();
-            const newid=users.length+1;
-            if(await validateUsername()==true && validateInputPass()==true && validateConfirm()==true && validateName()==true &&validateInputEmail()==true){
+
+            if( validateInputPass()==true && validateConfirm()==true && validateName()==true &&validateInputEmail()==true){
                 const user = {
-                    id:newid,
-                    username:username.value,
                     name:name.value,
                     password:password.value,
                     avatar:'https://cdn.iconscout.com/icon/free/png-512/laptop-user-1-1179329.png',
                     email:email.value,
-                    role:'customer'
                 }
-                if(UserApi.add(user)){
-                    alert('Đăng ký thành công !');
-                    window.location.hash='#/login';
-                }
+
+            if(AuthApi.signUp(user)){
+                alert('Đăng ký thành công !');
+                window.location.hash='#/login';
+            }
             }
         })
     }

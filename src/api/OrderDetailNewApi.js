@@ -15,6 +15,10 @@ const OrderDetailNewApi = {
     remove(id){
         const url = `/orderdetail/${id}`;
         return axiosClient.delete(url);
+    },
+    getOrderDetailByIdOrder(id){
+        const url = `/orderdetail/${id}`;
+        return axiosClient.get(url);
     }
 }
 export default OrderDetailNewApi;

@@ -1,4 +1,5 @@
 import { $ } from '../../utils.js';
+import AuthApi from '../../api/AuthApi';
 const HeaderHome = {
     render() {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -24,7 +25,7 @@ const HeaderHome = {
                                         </button>
                                         <ul id="menu_dropdown" class="border border-gray-400  absolute right-32 top-10 z-10 hidden" >
                                             
-                                            ${user.role === 'admin' ? `<li class="px-4 py-2 text-sm text-center border-b border-gray-400"><i class="fas fa-user-alt mr-2"></i><button id="btn_admin"class="focus:outline-none">Admin</button></li>` : ``}
+                                            ${user.role === 1 ? `<li class="px-4 py-2 text-sm text-center border-b border-gray-400"><i class="fas fa-user-alt mr-2"></i><button id="btn_admin"class="focus:outline-none">Admin</button></li>` : ``}
 
                                             <li class="px-4 py-2 text-sm">
                                             <i class="fas fa-sign-out-alt mr-2"></i><button class="focus:outline-none" id="logout">Logout</button>
@@ -77,6 +78,11 @@ const HeaderHome = {
             `
     },
     async afterRender() {
+        if(localStorage.getItem('user')!=null){
+            const { _id }  = JSON.parse(localStorage.getItem('user'));
+        }
+        
+        
         // click review_cart 
         const review_cart = $('#review_cart');
         const btn_review_cart = $('#btn_review_cart');
@@ -103,12 +109,16 @@ const HeaderHome = {
             }
         }
         logout.onclick = () => {
-            localStorage.removeItem('user');
-            window.location.hash='#/login'; 
+            if(AuthApi.signOut()){
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.hash='#/login'; 
+            }
         }
         $('#btn_admin').onclick = () => {
+    
             // window.location.replace('#/listproduct')
-            window.location.hash='#/listproduct';
+            window.location.hash=`#/listproduct`;
         }
     }
 }

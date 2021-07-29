@@ -4,8 +4,13 @@ import {  $, reRender,CheckLogin } from '../../utils.js';
 const ListComments = {
     async render() {
         CheckLogin();
-        const { data: comments} = await CommentApi.getAll();
         const { data : products } = await ProductApi.getAll();
+        const count = async ()=>{
+          const  num  = await Promise.all(products.map(product=>CommentApi.countCommentByProduct(product._id)));
+          return num;
+        }
+        const arr = await count();
+        console.log(arr);
         return `
         <table class="items-center w-full bg-transparent border-collapse" id="list_order">
         <thead>
@@ -31,7 +36,9 @@ const ListComments = {
           </tr>
         </thead>
         <tbody>
-        ${products.map((product,index) =>{
+        ${products.map( (product,index) =>{
+          // const { data : count }= await CommentApi.countCommentByProduct(product._id);
+        
             return `
                 <tr>
                 <th
@@ -42,10 +49,10 @@ const ListComments = {
                   ${product.name}
                 </td>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                    tổng cmt
+             
                 </td>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                <button class="btn btn_detail btn-primary btn-remove px-3 py-2 bg-blue-500 rounded text-white" data-id="${product.id}">Detail</button>
+                <button class="btn btn_detail btn-primary btn-remove px-3 py-2 bg-blue-500 rounded text-white" data-id="${product._id}">Detail</button>
                 </td>
             </tr>
             `

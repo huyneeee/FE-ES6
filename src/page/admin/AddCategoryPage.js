@@ -1,4 +1,4 @@
-import { reRender,$ } from '../../utils.js';
+import { reRender,$, parseRequestUrl } from '../../utils.js';
 import CategoryApi from '../../api/CategoryApi.js';
 import Sidebar from '../../components/admin/SideBar.js';
 import ListCategory from '../../components/admin/ListCategory.js';
@@ -62,8 +62,7 @@ const AddCategoryPage = {
         const name_category=$('#name_category');
         const image=$('#image_category');
         const description=$('#description');
-
-
+        const { _id:userId ,role} = JSON.parse(localStorage.getItem('user'));
         const inputNameCate =name_category.onchange= ()=>{
             if(validateEmpty(name_category.value)){
                 setError(name_category,'Không được để trống!');
@@ -94,9 +93,7 @@ const AddCategoryPage = {
             }
         }
         $('#form-add-category').addEventListener('submit',async e => {
-            e.preventDefault();
-            const { data: category } = await CategoryApi.getAll();
-            const newid=category.length+1;    
+            e.preventDefault();  
                     
             if(inputNameCate()==true && inputImage()==true && inputDescription()==true){
                  let image_category = $('#image_category').files[0];
@@ -105,20 +102,27 @@ const AddCategoryPage = {
             storageRef.put(image_category).then(function(){
                 storageRef.getDownloadURL().then(async(url)=>{
                     const category = {
-                    id:newid,
                     name:$('#name_category').value,
                     image:url,
                     description:$('#description').value,
                 }
-                if(CategoryApi.add(category)){
+                
+                try{    
+                    await CategoryApi.add(category,userId);
                     alert('Thêm danh mục thành công!');
                     window.location.hash='#/listcategory';
                     await reRender(ListCategory,'#list-category');
+                }catch (err){
+                    console.log(err.response.data);
+                    alert(''+err.response.data.error);
+                    window.location.hash = '#/listcategory';
+                     await reRender(ListCategory,'#list-category');
                 }
                 })
             })
             }
         })
+                    
     }
 }
 export default AddCategoryPage;

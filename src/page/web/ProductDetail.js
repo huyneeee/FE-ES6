@@ -51,7 +51,7 @@ const ProductDetail = {
                           </div>
                       </div>
                       <div class="flex justify-center py-3 border-b border-gray-500 mb-4">
-                      <button class="border-b-2 border-black font-bold  text-sm add-to-cart focus:outline-none" data-id="${product.id}">ADD TO CARD</button>
+                      <button class="border-b-2 border-black font-bold  text-sm add-to-cart focus:outline-none" data-id="${product._id}">ADD TO CARD</button>
                       </div>
                       <div class="flex justify-center">
                           <a href="" class="text-gray-500 mr-6 uppercase text-sm"><i class="fab fa-behance"></i></a>
@@ -83,11 +83,9 @@ const ProductDetail = {
   },
   async afterRender(){
     await HeaderHome.afterRender()
+    await Comment.afterRender()
     //add-cart
-    add_cart(ProductDetail);
-    return `
-        ${await Comment.afterRender()}
-    `
+    add_cart(ProductDetail);       
   }
 }
 export default ProductDetail;

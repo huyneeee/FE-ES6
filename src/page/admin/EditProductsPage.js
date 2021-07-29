@@ -1,9 +1,9 @@
-import { reRender, $ , parseRequestUrl } from '../../utils.js';
+import { reRender, $, parseRequestUrl } from '../../utils.js';
 import ProductApi from '../../api/ProductApi.js';
 import Sidebar from '../../components/admin/SideBar.js';
 import CategoryApi from '../../api/CategoryApi.js';
 import ListProduct from '../../components/admin/ListProduct';
-import { validateEmpty,validateFileImage, setError,setSuccess} from '../../validation';
+import { validateEmpty, validateFileImage, setError, setSuccess } from '../../validation';
 const EditProductsPage = {
     async render() /*html*/ {
         const { id } = parseRequestUrl();
@@ -63,11 +63,11 @@ const EditProductsPage = {
                         <div class="col-span-6 ">
                         <label  class="block text-sm font-medium text-gray-700">Category</label>
                         <select id="cate_id"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            ${category.map(cate=>{
-                                return `
-                                    <option ${cate.id===product.cate_id ? 'selected' : ''} value="${cate.id}">${cate.name}</option>
-                                `    
-                            }).join('')}
+                            ${category.map(cate => {
+            return `
+                                    <option ${cate._id === product.cate_id ? 'selected' : ''} value="${cate._id}">${cate.name}</option>
+                                `
+        }).join('')}
                         </select>
                     </div>
                     <div class="col-span-6 ">
@@ -77,6 +77,13 @@ const EditProductsPage = {
                         <input type="radio" name="status" class="status" value=""> Out of stock
                     </div> 
                 </div>
+                <div class="col-span-6 ">
+                <label class="block text-sm font-medium text-gray-700">Description</label>
+                <div class="relative">
+                    <textarea name="" id="description" cols="30" rows="5"class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >${product.description}</textarea>
+                    <span class="err absolute right-3 top-3 text-xs "></span>
+                </div>
+            </div>
                         </div>
                     </div>
                     <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -98,97 +105,113 @@ const EditProductsPage = {
         const name_product = $('#name_product');
         const quantity_product = $('#quantity_product');
         const price_product = $('#price_product');
-
-        const inputName =name_product.onchange= ()=>{
-            if(validateEmpty(name_product.value)){
-                setError(name_product,'Không được để trống!');
-            }else{
+        const description = $('#description');
+        const { _id: userId, role } = JSON.parse(localStorage.getItem('user'));
+        const { id } = parseRequestUrl();
+        const inputName = name_product.onchange = () => {
+            if (validateEmpty(name_product.value)) {
+                setError(name_product, 'Không được để trống!');
+            } else {
                 setSuccess(name_product);
                 return true;
             }
         }
-        const inputQuantity = quantity_product.onchange= ()=>{
-            if(validateEmpty(quantity_product.value)){
-                setError(quantity_product,'Không được để trống!');
-            }else{
-                if(quantity_product.value<=0){
-                    setError(quantity_product,'Không được để số âm!');
-                }else{
+        const inputdescription = description.onchange = () => {
+            if (validateEmpty(description.value)) {
+                setError(description, 'Không được để trống!');
+            } else {
+                setSuccess(description);
+                return true;
+            }
+        }
+        const inputQuantity = quantity_product.onchange = () => {
+            if (validateEmpty(quantity_product.value)) {
+                setError(quantity_product, 'Không được để trống!');
+            } else {
+                if (quantity_product.value <= 0) {
+                    setError(quantity_product, 'Không được để số âm!');
+                } else {
                     setSuccess(quantity_product);
                     return true;
                 }
-                
+
             }
         }
-        const inputPrice =price_product.onchange= ()=>{
-            if(validateEmpty(price_product.value)){
-                setError(price_product,'Không được để trống!');
-            }else{
-                if(price_product.value<=0){
-                    setError(price_product,'Không được để số âm!');
-                }else{
+        const inputPrice = price_product.onchange = () => {
+            if (validateEmpty(price_product.value)) {
+                setError(price_product, 'Không được để trống!');
+            } else {
+                if (price_product.value <= 0) {
+                    setError(price_product, 'Không được để số âm!');
+                } else {
                     setSuccess(price_product);
                     return true;
-                }  
+                }
             }
         }
-        $('#form-edit-product').addEventListener('submit',async e => {
+        $('#form-edit-product').addEventListener('submit', async e => {
             e.preventDefault();
             var value_status;
-            const status=$('.status');
-            for(let i=0;i<status.length;i++){
-                if(status[i].checked){
-                    value_status=Boolean(status[i].value);
+            const status = $('.status');
+            for (let i = 0; i < status.length; i++) {
+                if (status[i].checked) {
+                    value_status = Boolean(status[i].value);
                     break;
                 }
             }
-            if(inputName()==true  && inputQuantity()==true && inputPrice()==true ){
+            if (inputName() == true && inputQuantity() == true && inputPrice() == true && inputdescription() == true) {
                 let image_product = $('#image_product').files[0];
-                if(image_product){
-                    if(validateFileImage(image_product)==true){
+                if (image_product) {
+                    if (validateFileImage(image_product) == true) {
                         setSuccess($('#image_product'));
-                        let storageRef =  firebase.storage().ref(`images/${image_product.name}`);
-                        storageRef.put(image_product).then(function(){
-                            storageRef.getDownloadURL().then(async(url)=>{
+                        let storageRef = firebase.storage().ref(`images/${image_product.name}`);
+                        storageRef.put(image_product).then(function () {
+                            storageRef.getDownloadURL().then(async (url) => {
                                 const product = {
-                                    id:$('#id_product').value,
-                                    name:name_product.value,
-                                    image:url,
-                                    price:price_product.value,
-                                    quantity:quantity_product.value,
-                                    cate_id:$('#cate_id').value,
-                                    status:true
+
+                                    name: name_product.value,
+                                    image: url,
+                                    price: price_product.value,
+                                    quantity: quantity_product.value,
+                                    cate_id: $('#cate_id').value,
+                                    status: true,
+                                    description: description.value
                                 }
-                                const { id } = parseRequestUrl();
-                                if(ProductApi.edit(id,product)){
+                                try {
+                                    await ProductApi.edit(id, product, userId)
                                     alert('Sửa hàng hóa thành công');
-                                    window.location.hash='#/listproduct';
-                                    await reRender(ListProduct,'#list-products')
+                                    window.location.hash = '#/listproduct';
+                                    await reRender(ListProduct, '#list-products')
+                                } catch ( err ) {
+                                    alert(`${err.response.data.error}`);
                                 }
+
                             })
                         })
-                    }else{
-                        setError($('#image_product'),'File không đúng định dạng!');
+                    } else {
+                        setError($('#image_product'), 'File không đúng định dạng!');
                     }
-                }else{
+                } else {
                     const product = {
-                        id:$('#id_product').value,
-                        name:$('#name_product').value,
-                        image:$('#old_image').value,
-                        quantity:$('#quantity_product').value,
-                        price:$('#price_product').value,
-                        cate_id:$('#cate_id').value,
-                        status:value_status
+                        name: $('#name_product').value,
+                        image: $('#old_image').value,
+                        quantity: $('#quantity_product').value,
+                        price: $('#price_product').value,
+                        cate_id: $('#cate_id').value,
+                        status: value_status,
+                        description: description.value
                     }
-                    const { id } = parseRequestUrl();
-                    if(ProductApi.edit(id,product)){
+                    try {
+                        await ProductApi.edit(id, product, userId)
                         alert('Sửa hàng hóa thành công');
-                        window.location.hash='#/listproduct';
-                        await reRender(ListProduct,'#list-products')
+                        window.location.hash = '#/listproduct';
+                        await reRender(ListProduct, '#list-products')
+                    } catch (err ){
+                        alert(`${err.response.data.error}`);
                     }
                 }
             }
-            
+
         })
     }
 }

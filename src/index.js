@@ -32,12 +32,12 @@ import ListContactAdmin from './page/admin/ListContactAdmin.js';
 const routes = {
     '/': HomePage,
     '/products': ProductsPage,
-    '/products&page=1': ProductsPage,
-    '/products&page=2': ProductsPage,
-    '/products/:id': ProductDetail,
+    '/products?page=1': ProductsPage,
+    '/products?page=2': ProductsPage,
+    '/product/:id': ProductDetail,
     '/category/:id':HomePage,
     '/blogs':BlogsPage,
-    '/blogs/:id':BlogsPageDetail,
+    '/blog/:id':BlogsPageDetail,
     '/about':AboutPage,
     '/contact':ContacPage,
     '/categories/:id':ProductsCategoryPage,
@@ -55,8 +55,8 @@ const routes = {
     '/listblogs':ListBlogsAdmin,
     '/listcontact':ListContactAdmin,
     //edit
-    '/users/:id/edit':EditUserPage,
-    '/products/:id/edit':EditProductsPage,
+    '/user/:id/edit':EditUserPage,
+    '/product/:id/edit':EditProductsPage,
     '/category/:id/edit':EditCategoryPage,
     '/blogs/:id/edit':EditBlogsPage,
     //bonus

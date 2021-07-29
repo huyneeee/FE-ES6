@@ -57,10 +57,6 @@ const ListOrderAdmin = {
                         class="px-6 bg-red-300 text-gray-600 align-middle border border-solid border-white py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-cư">
                         Quantity
                         </th>
-                        <th
-                        class="px-6 bg-red-300 text-gray-600 align-middle border border-solid border-white py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left">
-                        Status
-                        </th>
                     </tr>
                 </thead>
                 <tbody id="list_order_detail"></tbody>
@@ -81,8 +77,9 @@ const ListOrderAdmin = {
             modal_order_detail.classList.remove('hidden');
             modal_order_detail.classList.add('flex');
             const id=btn.dataset.id;
-            const { data : order_detail } = await OrderDetailNewApi.getAll();
-            const arr_order_detail_by_id=order_detail.filter(order=>order.id_order===id);
+            // const { data : order_detail } = await OrderDetailNewApi.getAll();
+            // const arr_order_detail_by_id=order_detail.filter(order=>order.id_order===id);
+            const { data : arr_order_detail_by_id } = await OrderDetailNewApi.getOrderDetailByIdOrder(id)
             const model = arr_order_detail_by_id.map(ele=>{
                   return `    
                     <tr>
@@ -101,9 +98,6 @@ const ListOrderAdmin = {
                           </td>
                           <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-center text-xs whitespace-no-wrap p-4">
                           ${ele.sl}
-                          </td>
-                          <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                          ${ele.status?'<span class="text-green-500"><i class="fas fa-circle"></i> Stoking</span>':'<span class="text-red-500"><i class="fas fa-circle"></i> Out of stockg</span>'}
                           </td>
                     </tr>
                   `

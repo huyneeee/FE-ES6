@@ -67,6 +67,7 @@ const EditBlogsPage = {
     async afterRender() {
         const name = $('#name');
         const content = $('#content');
+        const { _id : userId } = JSON.parse(localStorage.getItem('user'));
         const inputContent =content.onchange= ()=>{
             if(validateEmpty(content.value)){
                 setError(content,'Không được để trống!');
@@ -85,9 +86,6 @@ const EditBlogsPage = {
         }
         $('#form-edit-blog').addEventListener('submit',async e => {
             e.preventDefault();
-            const today= new Date();
-            const date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
-
 
             if(inputName()==true && inputContent()==true){
                 let image = $('#image').files[0];
@@ -98,17 +96,18 @@ const EditBlogsPage = {
                         storageRef.put(image).then(function(){
                             storageRef.getDownloadURL().then(async (url)=>{
                                     const blog = {
-                                    id:$('#id').value,
                                     name:$('#name').value,
                                     image:url,
-                                    content:$('#content').value,
-                                    date_post:date
+                                    content:$('#content').value
                                     }
                                     const { id } = parseRequestUrl();
-                                    if(BlogApi.edit(id,blog)){
-                                        alert('Sửa bài viết thành công');
+                                    try{
+                                        await BlogApi.edit(blog,id,userId);
+                                        alert('Thêm bài viết thành công!');
                                         window.location.hash='#/listblogs';
-                                        await reRender(ListBlogs,'#list-blogs');
+                                        await reRender(ListBlog,'#list-blogs');
+                                    }catch(error){
+                                        alert(`${error.response.data.error}`);
                                     }
                             })
                         })
@@ -117,17 +116,18 @@ const EditBlogsPage = {
                     }
                 }else{
                     const blog = {
-                        id:$('#id').value,
                         name:$('#name').value,
                         image:$('#old_image').value,
-                        content:$('#content').value,
-                        date_post:date
+                        content:$('#content').value
                         }
                         const { id } = parseRequestUrl();
-                        if(BlogApi.edit(id,blog)){
-                            alert('Sửa bài viết thành công');
+                        try{
+                            await BlogApi.edit(blog,id,userId);
+                            alert('Thêm bài viết thành công!');
                             window.location.hash='#/listblogs';
-                            await reRender(ListBlogs,'#list-blogs');
+                            await reRender(ListBlog,'#list-blogs');
+                        }catch(error){
+                            alert(`${error.response.data.error}`);
                         }
                 }
             }

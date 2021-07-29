@@ -1,17 +1,17 @@
-import { reRender,$ } from "../../utils";
+import { reRender, $ } from "../../utils";
 import SideBar from '../../components/admin/SideBar.js';
 import ListComments from '../../components/admin/ListComments';
 import CommentApi from '../../api/CommentApi';
 import ProductApi from '../../api/ProductApi';
 import UserApi from '../../api/UserApi';
 const ListCommentsAdmin = {
-    async render(){
-        const { data : products } = await ProductApi.getAll();
-        const { data : commemts } = await CommentApi.getAll();
+    async render() {
+        // const { data: products } = await ProductApi.getAll();
+        // const { data: commemts } = await CommentApi.getAll();
 
-        const arr_id_product = commemts.map(cmt=>cmt.id_product).reduce((acc,curent)=>{
-            return acc.includes(curent) ? acc : [...acc,curent];
-        },[])
+        // const arr_id_product = commemts.map(cmt => cmt.id_product).reduce((acc, curent) => {
+        //     return acc.includes(curent) ? acc : [...acc, curent];
+        // }, [])
         // console.log(arr_id_product);
         return `
         ${SideBar.render()}
@@ -73,25 +73,25 @@ const ListCommentsAdmin = {
     </div>  
         `
     },
-    async afterRender(){
+    async afterRender() {
         await SideBar.afterRender();
-        const btns=$('#list_order .btn_detail');
-        const modal_order_detail =$('#modal_order_detail');
-        const btn_delete =$('#btn_delete');
-    //hiện modal
-     btns.forEach(btn => {
-        btn.onclick= async ()=>{
-            $('#nav').classList.add('blur-md');
-            $('#main').classList.add('blur-md');
-            modal_order_detail.classList.remove('hidden');
-            modal_order_detail.classList.add('flex');
-            const id=btn.dataset.id;
-            const { data : comments } = await CommentApi.getAll();
-            const comment_by_product=comments.filter(comment=>comment.id_product===id);
-            
-            const model = comment_by_product.map((ele,index)=>{
+        const btns = $('#list_order .btn_detail');
+        const modal_order_detail = $('#modal_order_detail');
+        const btn_delete = $('#btn_delete');
+        //hiện modal
+        btns.forEach(btn => {
+            btn.onclick = async () => {
+                $('#nav').classList.add('blur-md');
+                $('#main').classList.add('blur-md');
+                modal_order_detail.classList.remove('hidden');
+                modal_order_detail.classList.add('flex');
+                const id = btn.dataset.id;
+                const { data: comments } = await CommentApi.getAll();
+                const comment_by_product = comments.filter(comment => comment.id_product === id);
 
-                  return `    
+                const model = comment_by_product.map((ele, index) => {
+
+                    return `    
                     <tr>
                           <th
                           class="border-t-0 px-6  align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4 text-left">
@@ -104,36 +104,48 @@ const ListCommentsAdmin = {
                           ${ele.content}
                           </td>
                           <td class="border-t-0 px-6 align-middle border-l-0 border-r-0  text-xs whitespace-no-wrap p-4">
-                          ${ele.date}
+                          ${ele.createdAt.slice(0, 10)}
                           </td>
                           <td class="border-t-0 px-6 align-middle border-l-0 border-r-0  text-xs whitespace-no-wrap p-4">
-                          <button  class="btn btn-remove  px-3 py-2 bg-red-500 rounded text-white" data-id="${ele.id}">Delete</button>
+                          <button  class="btn btn-remove  px-3 py-2 bg-red-500 rounded text-white" data-id="${ele._id}">Delete</button>
                           </td>
                           
                     </tr>
                   `
-              }).join('')
-              $('#list_comment_detail').innerHTML=model ? model : '<p class="my-5 text-center">Sản phẩm chưa có lượt comment nào cả !</p>';
-            //xóa comment
-            const btn_remove=$('#list_comment_detail .btn-remove');
-            btn_remove.forEach(btn=>{
-                btn.onclick=async ()=>{
-                    const id = btn.dataset.id;
-                    const question = confirm ('Bạn có chắc chắn muốn xóa ?');
-                    if(question){
-                        await CommentApi.remove(id);
+                }).join('')
+                $('#list_comment_detail').innerHTML = model ? model : '<p class="my-5 text-center">Sản phẩm chưa có lượt comment nào cả !</p>';
+                //xóa comment
+                const btn_remove = document.querySelectorAll('#list_comment_detail .btn-remove');
+                const { _id: userId } = JSON.parse(localStorage.getItem('user'));
+                btn_remove.forEach(btn => {
+                    btn.onclick = async () => {
+                        const id = btn.dataset.id;
+                        const question = confirm('Bạn có chắc chắn muốn xóa ?');
+                        if (question) {
+                            try {
+                                await CommentApi.remove(id, userId);
+                                window.location.hash = '#/listcomments';
+                                modal_order_detail.classList.add('hidden');
+                                modal_order_detail.classList.remove('flex');
+                                $('#main').classList.remove('blur-md');
+                                $('#nav').classList.remove('blur-md');
+                            } catch (error) {
+                                alert(`${error.response.data.error}`);
+                            }
+
+                        }
                     }
-                }
-            })
-            }         
-        // ẩn modal    
-        btn_delete.onclick=()=>{
-            modal_order_detail.classList.remove('flex');
-            $('#main').classList.remove('blur-md');
-            modal_order_detail.classList.add('hidden');
-            $('#nav').classList.remove('blur-md');
-        }
-     });
+                })
+
+            }
+            // ẩn modal    
+            btn_delete.onclick = () => {
+                modal_order_detail.classList.remove('flex');
+                $('#main').classList.remove('blur-md');
+                modal_order_detail.classList.add('hidden');
+                $('#nav').classList.remove('blur-md');
+            }
+        });
     }
 }
 export default ListCommentsAdmin;

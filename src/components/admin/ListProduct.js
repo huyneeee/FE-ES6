@@ -1,10 +1,11 @@
 import ProductApi from '../../api/ProductApi.js';
-import { reRender, $ ,CheckLogin } from '../../utils.js';
+import { reRender, $, CheckLogin, parseRequestUrl } from '../../utils.js';
 const ListProduct = {
-    async render() {   
-        CheckLogin();
-        const { data : products } = await ProductApi.getAll();
-        return `
+  async render() {
+    // const { id } = parseRequestUrl(); 
+    CheckLogin();
+    const { data: products } = await ProductApi.getAll();
+    return `
         <table class="items-center w-full bg-transparent border-collapse" >
         <thead>
           <tr>
@@ -39,8 +40,8 @@ const ListProduct = {
           </tr>
         </thead>
         <tbody>
-        ${products.map((product,index) =>{
-            return `
+        ${products.map((product, index) => {
+      return `
                 <tr>
                 <th
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4 text-left">
@@ -59,33 +60,38 @@ const ListProduct = {
                 ${product.quantity}
                 </td>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                ${product.status?'<span class="text-green-500"><i class="fas fa-circle"></i> Stoking</span>':'<span class="text-red-500"><i class="fas fa-circle"></i> Out of stockg</span>'}
+                ${product.status ? '<span class="text-green-500"><i class="fas fa-circle"></i> Stoking</span>' : '<span class="text-red-500"><i class="fas fa-circle"></i> Out of stockg</span>'}
                 </td>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                <a href="/#/products/${product.id}/edit" class="btn btn-primary px-3 py-2 bg-blue-500 rounded text-white">Edit</a>
-                <button href="/products/${product.id}" class="btn btn-remove btn-primary btn-remove px-3 py-2 bg-red-500 rounded text-white" data-id="${product.id}">Delete</button>
+                <a href="/#/product/${product._id}/edit" class="btn btn-primary px-3 py-2 bg-blue-500 rounded text-white">Edit</a>
+                <button href="/product/${product._id}" class="btn btn-remove btn-primary btn-remove px-3 py-2 bg-red-500 rounded text-white" data-id="${product._id}">Delete</button>
                 </td>
             </tr>
             `
-        }).join("")}
+    }).join("")}
         
         </tbody>
       </table>
         `
-    },
-    async afterRender() {
-        CheckLogin();
-        const btns = $('#list-products .btn-remove');
-        btns.forEach( btn => {
-            const id = btn.dataset.id;
-            btn.addEventListener('click',async function(){
-                const question = confirm ('Bạn có chắc chắn muốn xóa ?');
-                if(question){
-                    await ProductApi.remove(id);
-                    await reRender(ListProduct,'#list-products')
-                }
-            } )
-        })
-    }
+  },
+  async afterRender() {
+    CheckLogin();
+    const { _id: userId, role } = JSON.parse(localStorage.getItem('user'));
+    const btns = $('#list-products .btn-remove');
+    btns.forEach(btn => {
+      const id = btn.dataset.id;
+      btn.addEventListener('click', async function () {
+        const question = confirm('Bạn có chắc chắn muốn xóa ?');
+        if (question) {
+          try {
+            await ProductApi.remove(id, userId);
+            await reRender(ListProduct, '#list-products')
+          } catch (err) {
+            alert(`${err.response.data.error}`);
+          }
+        }
+      })
+    })
+  }
 }
 export default ListProduct;

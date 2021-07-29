@@ -27,7 +27,7 @@ export const reRender = async (component,position = "")=>{
 export const CheckLogin = (URL) =>{
     const user=JSON.parse(localStorage.getItem('user'));
     if(user){  
-        if(user.role==='admin'){
+        if(user.role===1){
             return user;
         }else{
             if(URL==='checkout'){

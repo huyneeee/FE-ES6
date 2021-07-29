@@ -14,9 +14,6 @@ const OrderPage = {
         if(arr_product_cart!=null){
             var subtotal = arr_product_cart.reduce( ( sum, { sl,price } ) => sum + sl*price , 0);        
         }
-        //id order
-        const { data: order } = await OrderApi.getAll();
-        const newid=order.length+1;
         return `
         ${HeaderHome.render()}
         ${Navigation.render()}
@@ -33,8 +30,7 @@ const OrderPage = {
                             class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white  shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"  value="${user.name}" disabled>
                     </div>
                     <input type="hidden" id="subtotal" value="${subtotal}">
-                    <input type="hidden" id="id" value="${newid}">
-                    <input type="hidden" id="id_order_maker" value="${user.id}">
+                    <input type="hidden" id="id_order_maker" value="${user._id}">
                     
                     
                     <div class="col-span-6 sm:col-span-3 lg:col-span-2 mb-2">
@@ -148,24 +144,30 @@ const OrderPage = {
 
             if(validateName()==true&&validateAddress()==true&&validateInputPhone()==true){
                 const order= {
-                    "id":$('#id').value,
                     "id_order_maker":$('#id_order_maker').value,
                     "name_of_consignee":$('#name_of_consignee').value,
                     "address": $('#address').value,
                     "phone":$('#phone').value,
                     "subtotal":$('#subtotal').value
                 }
-                const arr_product_cart = JSON.parse(localStorage.getItem('arr_product_cart'));  
-                    arr_product_cart.forEach(product => {
-                        const order_detail = {...product,id_order:$('#id').value,id:''};
-                        OrderDetailNewApi.add(order_detail);
-                    });
+                try{
+                    const { data : result } = await OrderApi.add(order);
+                    const id_order = result._id;
+                    const arr_product_cart = JSON.parse(localStorage.getItem('arr_product_cart'));  
+                        arr_product_cart.forEach(product => {
+                            const order_detail = {id_product:product._id,name:product.name,image:product.image,price:product.price,cate_id:product.cate_id,sl:product.sl,id_order:id_order};
+                            OrderDetailNewApi.add(order_detail);
+                        });
 
-                if(OrderApi.add(order)){
-                    localStorage.removeItem('arr_product_cart');
-                    alert('Đặt hàng thành công!');
-                    window.location.hash='';
+                        localStorage.removeItem('arr_product_cart');
+                        alert('Đặt hàng thành công!');
+                        window.location.hash='';
+
+                }catch(error){
+                        alert('Đặt hàng không thành công !');
+                        window.location.hash='/#/login'
                 }
+                
             }
             
         })

@@ -1,4 +1,5 @@
 import { axiosClient } from './axiosClient.js';
+
 const CategoryApi = {
     getAll(){
         const url = `/category`;
@@ -8,16 +9,16 @@ const CategoryApi = {
         const url = `/category/${id}`;
         return axiosClient.get(url);
     },
-    add(category){
-        const url = `/category`;
+    add(category,userId){
+        const url = `/category/${userId}`;
         return axiosClient.post(url,category);
     },
-    remove(id){
-        const url = `/category/${id}`;
+    remove(id,userId){
+        const url = `/category/${id}/${userId}`;
         return axiosClient.delete(url)
     },
-    edit(id,category){
-        const url = `/category/${id}`;
+    edit(id,category,userId){
+        const url = `/category/${id}/${userId}`;
         return axiosClient.put(url,category)
     }
 }

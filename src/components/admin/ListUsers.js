@@ -14,10 +14,6 @@ const ListUsers = {
             </th>
             <th
               class="px-6 bg-gray-100 text-gray-600 align-middle border border-solid border-gray-200 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left">
-              User Name 
-            </th>
-            <th
-              class="px-6 bg-gray-100 text-gray-600 align-middle border border-solid border-gray-200 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left">
               Name
             </th>
             <th
@@ -48,9 +44,6 @@ const ListUsers = {
                 ${index}
                 </th>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                ${user.username}
-                </td>
-                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
                 ${user.name}
                 </td>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
@@ -63,8 +56,8 @@ const ListUsers = {
                 ${user.role==='admin'? `<i class="fas fa-user-shield text-lg"></i> <b>${user.role}</b>` : `<i class="fas fa-user text-lg"></i> ${user.role}`}
                 </td>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                <a href="/#/users/${user.id}/edit" class="btn btn-primary px-3 py-2 bg-blue-500 rounded text-white">Edit</a>
-                <button href="/users/${user.id}" class="btn btn-remove btn-primary btn-remove px-3 py-2 bg-red-500 rounded text-white" data-id="${user.id}">Delete</button>
+                <a href="/#/user/${user._id}/edit" class="btn btn-primary px-3 py-2 bg-blue-500 rounded text-white">Edit</a>
+                <button href="/users/${user._id}" class="btn btn-remove btn-primary btn-remove px-3 py-2 bg-red-500 rounded text-white" data-id="${user._id}">Delete</button>
                 </td>
             </tr>
             `
@@ -76,14 +69,20 @@ const ListUsers = {
     },
     async afterRender() {
       CheckLogin();
+      const { _id : userId} = JSON.parse(localStorage.getItem('user'));
         const btns = $('#list-users .btn-remove');
         btns.forEach( btn => {
             const id = btn.dataset.id;
             btn.addEventListener('click',async function(){
                 const question = confirm ('Bạn có chắc chắn muốn xóa ?');
                 if(question){
-                    await UserApi.remove(id);
-                    await reRender(ListUsers, '#list-users');
+                    try{
+                      await UserApi.remove(id,userId);
+                      await reRender(ListUsers, '#list-users');
+                    }catch(error){  
+                        alert(`${error.response.data.error}`)
+                    }
+                   
                 }
             } )
         })

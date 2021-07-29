@@ -69,7 +69,7 @@ const AddBlogsPage = {
         const name_blog = $('#name_blog');
         const image_blog = $('#image_blog');
         const content = $('#content');
-
+        const { _id : userId } = JSON.parse(localStorage.getItem('user'));
         const inputName =name_blog.onchange= ()=>{
             if(validateEmpty(name_blog.value)){
                 setError(name_blog,'Không được để trống!');
@@ -100,26 +100,23 @@ const AddBlogsPage = {
         }
         $('#form-add-blog').addEventListener('submit',e => {
             e.preventDefault();
-            const today= new Date();
-            const date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
-
             if(inputName()==true&&inputImage()==true&&inputContent()==true){
                 let image_blog = $('#image_blog').files[0];   
                 let storageRef =  firebase.storage().ref(`images/${image_blog.name}`);
                 storageRef.put(image_blog).then(function(){
                     storageRef.getDownloadURL().then(async(url)=>{
                         const blog = {
-                        id:$('#id_blog').value,
                         name:$('#name_blog').value,
                         image:url,
-                        content:$('#content').value,
-                        date_post:date
+                        content:$('#content').value
                     }
-
-                    if(BlogApi.add(blog)){
+                    try{
+                        await BlogApi.add(blog,userId);
                         alert('Thêm bài viết thành công!');
                         window.location.hash='#/listblogs';
                         await reRender(ListBlog,'#list-blogs');
+                    }catch(error){
+                        alert(`${error.response.data.error}`);
                     }
                     })
                 })

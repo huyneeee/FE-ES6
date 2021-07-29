@@ -3,6 +3,7 @@ import { $ } from '../../utils.js';
 import UserApi from '../../api/UserApi.js';
 import FooterHome from '../../components/web/FooterHome.js';
 import Navigation from '../../components/web/Navigation.js';
+import AuthApi from '../../api/AuthApi';
 const LoginPage = {
     render() {
         return `
@@ -15,7 +16,7 @@ const LoginPage = {
                         <hr>
                         <p class="text-gray-400 my-3 text-sm">If you have an account, sign in with your username.</p>
                         <div class="mb-7 relative">
-                        <input type="text" class="w-full border-2 border-gray-300 px-2 py-2  rounded focus:outline-none" placeholder="User Name" id="username" >
+                        <input type="text" class="w-full border-2 border-gray-300 px-2 py-2  rounded focus:outline-none" placeholder="Email" id="email" >
                         <span id="err_user" class=" text-xs text-red-400 absolute right-1 top-3"></span>
                         </div>
                         <div class="relative">
@@ -38,48 +39,74 @@ const LoginPage = {
             ${FooterHome.render()}
         `
     },
-    async afterRender(){
+    async afterRender() {
         await HeaderHome.afterRender();
-        const username=$('#username');
-        const password=$('#password');
-        const err_user=$('#err_user');
-        const err_pass=$('#err_pass');
-        const { data: users } = await UserApi.getAll();
-        
-        password.oninput=()=>{
-            err_pass.innerHTML='';
-            password.style.border='solid 1px gray';
+        const email = $('#email');
+        const password = $('#password');
+        const err_user = $('#err_user');
+        const err_pass = $('#err_pass');
+
+
+        password.oninput = () => {
+            err_pass.innerHTML = '';
+            password.style.border = 'solid 1px gray';
         }
-        const user =username.onchange=()=>{
-            if(username.value==''){
-                username.style.border='solid 1px red';
-                err_user.innerHTML='Tài khoản không được để trống <i class="fas fa-exclamation-circle"></i>';
-                return false;
-            }else{
-                const user_invalid=users.find(user=>user.username===username.value.trim());
-                if(user_invalid){
-                    err_user.innerHTML='<i class="fas fa-check-circle text-green-400"></i>';
-                    username.style.border='solid 1px green';
-                        if(user_invalid.password===password.value.trim()){
-                            localStorage.setItem('user',JSON.stringify(user_invalid));
-                            const user=JSON.parse(localStorage.getItem('user'));
-                            return true;
-                        }else{  
-                            err_pass.innerHTML='Sai password <i class="fas fa-exclamation-circle"></i>';
-                            password.style.border='solid 1px red';
-                        }
-                }else{
-                    username.style.border='solid 1px red';
-                    err_user.innerHTML='Tài khoản không xác định <i class="fas fa-exclamation-circle"></i>';
-                    return false;
-                }
+        // const inputEmail =email.onchange=()=>{
+        //     if(email.value==''){
+        //         email.style.border='solid 1px red';
+        //         err_user.innerHTML='Tài khoản không được để trống <i class="fas fa-exclamation-circle"></i>';
+        //         return false;
+        //     }else{
+        //         const user_invalid=users.find(user=>user.email===email.value.trim());
+        //         if(user_invalid){
+        //             err_user.innerHTML='<i class="fas fa-check-circle text-green-400"></i>';
+        //             email.style.border='solid 1px green';
+        //                 if(user_invalid.password===password.value.trim()){
+        //                     localStorage.setItem('user',JSON.stringify(user_invalid));
+        //                     const user=JSON.parse(localStorage.getItem('user'));
+        //                     return true;
+        //                 }else{  
+        //                     err_pass.innerHTML='Sai password <i class="fas fa-exclamation-circle"></i>';
+        //                     password.style.border='solid 1px red';
+        //                 }
+        //         }else{
+        //             email.style.border='solid 1px red';
+        //             err_user.innerHTML='Tài khoản không xác định <i class="fas fa-exclamation-circle"></i>';
+        //             return false;
+        //         }
+        //     }
+
+        // } 
+        $('#form-login').addEventListener('submit', async e => {
+            e.preventDefault();
+            const profile = {
+                email: $('#email').value,
+                password: $('#password').value
             }
 
-        } 
-        $('#form-login').addEventListener('submit',e=>{
-            e.preventDefault();    
-            if(user()==true){
-                window.location.hash='#/';
+            try {
+                const { data: userSignIn } = await AuthApi.signIn(profile);
+                // console.log(userSignIn);
+                if(localStorage.getItem('user')==null){
+                    localStorage.setItem('user',JSON.stringify(userSignIn.user));
+                    localStorage.setItem('token',JSON.stringify(userSignIn.token));
+                }                
+                err_pass.innerHTML = '<i class="fas fa-check-circle text-green-400"></i>';
+                password.style.border = 'solid 1px green';
+
+                window.location.hash = '/';
+            } catch (err) {
+                if (err.response.data.email) {
+                    email.style.border = 'solid 1px red';
+                    err_user.innerHTML = `${err.response.data.error}<i class="fas fa-exclamation-circle"></i>`;
+                } else {
+                    err_user.innerHTML = '<i class="fas fa-check-circle text-green-400"></i>';
+                    email.style.border = 'solid 1px green';
+                }
+                if (err.response.data.password) {
+                    err_pass.innerHTML = `${err.response.data.error}<i class="fas fa-exclamation-circle"></i>`;
+                    password.style.border = 'solid 1px red';
+                }
             }
         })
     }

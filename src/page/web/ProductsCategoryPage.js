@@ -48,7 +48,7 @@ const ProductsCategoryPage = {
                                 style="background-image: url('${product.image}');">
                             </div>
                             <div class="absolute top-40 left-32 hidden group-hover:block transition-all ">
-                            <a href="#/products/${product.id}">
+                            <a href="#/product/${product._id}">
                                 <i class="fas fa-eye text-white text-5xl"></i>
                             </a>     
                             </div>   
@@ -58,7 +58,7 @@ const ProductsCategoryPage = {
                                 
                                 <div class="flex mt-3">
                                         <div class="flex-1">
-                                        <button class="border-b-2 border-black font-bold  text-sm add-to-cart focus:outline-none transform -translate-x-32 group-hover:translate-x-20 transition-all duration-500" data-id="${product.id}">ADD TO CARD</button>
+                                        <button class="border-b-2 border-black font-bold  text-sm add-to-cart focus:outline-none transform -translate-x-32 group-hover:translate-x-20 transition-all duration-500" data-id="${product._id}">ADD TO CARD</button>
                                         </div>
                                         <div class="flex-1">
                                             <p class="font-extrabold text-md transform -translate-x-16 group-hover:translate-x-40 transition-all duration-500">$${product.price}</p>

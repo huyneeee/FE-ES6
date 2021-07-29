@@ -35,7 +35,7 @@ const SideBarProducts = {
                         ${Categories.map(cate=>{
                             return `
                             <li class="py-2 mt-3 ml-5">
-                                <p>${cate.name} <input type="radio" ${id===cate.id ? 'checked' : ''}  name="cate_check" value="${cate.id}" class="w-4 h-4 cate_check"></p>
+                                <p>${cate.name} <input type="radio" ${id===cate._id ? 'checked' : ''}  name="cate_check" value="${cate._id}" class="w-4 h-4 cate_check"></p>
                             </li>
                             `
                         }).join('')}
@@ -113,7 +113,7 @@ const SideBarProducts = {
                 const result = products.map(product=>{
                     return `
                     <div class=" h-auto group overflow-hidden">
-                    <a href="#/products/${product.id}">
+                    <a href="#/product/${product._id}">
                     <div class=" w-full h-96 bg-gray-500 bg-no-repeat bg-cover bg-center  "
                           style="background-image: url('${product.image}');">
                       </div>
@@ -122,7 +122,7 @@ const SideBarProducts = {
                       <a  class="text-md font-normal uppercase text-gray-500 ">${product.name}</a>    
                           <div class="flex mt-3">
                                   <div class="flex-1">
-                                  <button class="border-b-2 border-black font-bold  text-sm add-to-cart focus:outline-none transform -translate-x-32 group-hover:translate-x-20 transition-all duration-500" data-id="${product.id}">ADD TO CARD</button>
+                                  <button class="border-b-2 border-black font-bold  text-sm add-to-cart focus:outline-none transform -translate-x-32 group-hover:translate-x-20 transition-all duration-500" data-id="${product._id}">ADD TO CARD</button>
                                   </div>
                                   <div class="flex-1">
                                   <p class="font-extrabold text-md transform -translate-x-16 group-hover:translate-x-40 transition-all duration-500">$${product.price}</p>
@@ -145,13 +145,14 @@ const SideBarProducts = {
                 
                 $('#list_filter_price').style.display="none";    
                 btn.checked=false;
-                const { data: products } = await ProductApi.getAll();
+
                 if(max==50){
                     $('#filter_price').firstElementChild.innerHTML=`Price: 0 - 50`;
-                    var arr_product = products.filter(product=>Number(product.price)<=max);
+                    var { data : arr_product} = await ProductApi.getProductByPrice(0,50);
+
                 }else if(max==100){
                     $('#filter_price').firstElementChild.innerHTML=`Price: 50 - 100`;
-                    var arr_product = products.filter(product=>Number(product.price)>=50&&Number(product.price)<=max);
+                    var { data : arr_product} = await ProductApi.getProductByPrice(50,100);
                 }
                 const result=arr_product.map(product=>{
                     return `

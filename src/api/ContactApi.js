@@ -12,8 +12,8 @@ const ContactApi = {
         const url = `/contact`;
         return axiosClient.post(url,contact);
     },
-    remove(id){
-        const url = `/contact/${id}`;
+    remove(id,userId){
+        const url = `/contact/${id}/${userId}`;
         return axiosClient.delete(url)
     }
 }

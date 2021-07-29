@@ -64,7 +64,7 @@ const ListCategory = {
                 $${order.subtotal}
                 </td>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                <button class="btn btn_detail btn-primary btn-remove px-3 py-2 bg-blue-500 rounded text-white" data-id="${order.id}">Detail</button>
+                <button class="btn btn_detail btn-primary btn-remove px-3 py-2 bg-blue-500 rounded text-white" data-id="${order._id}">Detail</button>
                 </td>
             </tr>
             `

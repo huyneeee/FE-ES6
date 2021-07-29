@@ -26,19 +26,19 @@ const ShowCart = {
                                 <td class=" p-4 flex  border-b border-gray-300">
                                     <div class="bg-cover bg-center w-1/4 h-24 mr-3 " style="background-image: url(${product.image})"></div>
                                     <div class="row w-3/4">
-                                    <a href="#/products/${product.id}" class="w-full text-md font-normal  text-gray-900">${product.name}</a>
+                                    <a href="#/products/${product._id}" class="w-full text-md font-normal  text-gray-900">${product.name}</a>
                                     <p class="w-full text-md font-bold  text-gray-900 mt-3">$${product.price}</p>
                                     </div>
                                 </td>
                                 <td class="border border-gray-300 text-center">
                                     <div class="flex flex-col ">
-                                        <div><button data-id="${product.id}" class="btn_up_qty focus:outline-none"><i class="fas fa-caret-up text-4xl"></i></button></div>
+                                        <div><button data-id="${product._id}" class="btn_up_qty focus:outline-none"><i class="fas fa-caret-up text-4xl"></i></button></div>
                                         <div>${product.sl}</div>
-                                        <div><button data-id="${product.id}" class="btn_down_qty focus:outline-none"><i class="fas fa-caret-down text-4xl"></i></button></div>
+                                        <div><button data-id="${product._id}" class="btn_down_qty focus:outline-none"><i class="fas fa-caret-down text-4xl"></i></button></div>
                                     </div>
                                 </td>
                                 <td class="border border-gray-300 text-center">$${product.price*product.sl}</td>
-                                <td class="border border-gray-300 text-center"><button class="remove-product-cart focus:outline-none" data-id="${product.id}"><i class="fas fa-trash text-2xl"></i></button></td>
+                                <td class="border border-gray-300 text-center"><button class="remove-product-cart focus:outline-none" data-id="${product._id}"><i class="fas fa-trash text-2xl"></i></button></td>
                                 </tr>
                             `
                         }).join('')}

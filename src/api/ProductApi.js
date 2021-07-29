@@ -5,27 +5,23 @@ const ProductApi = {
         return axiosClient.get(url);
     },
     get(id){
-        const url = `/products/${id}`;
-        return axiosClient.get(url);
-    },
-    getProductPaginate(currentPage,row_per_page){
-        const url =`/products?_page=${currentPage}&_limit=${row_per_page}`;
+        const url = `/product/${id}`;
         return axiosClient.get(url);
     },
     getProductsByCateId(id){
-        const url = `/products?cate_id=${id}`;
+        const url = `/products/category/${id}`;
         return axiosClient.get(url);
     },
-    remove(id){
-        const url = `/products/${id}`;
+    remove(id,userId){
+        const url = `/product/${id}/${userId}`;
         return axiosClient.delete(url);
     },
-    add(product){
-        const url = `/products`;
+    add(product,userId){
+        const url = `/product/${userId}`;
         return axiosClient.post(url, product);
     },
-    edit(id,product){
-        const url = `/products/${id}`;
+    edit(id,product,userId){
+        const url = `/product/${id}/${userId}`;
         return axiosClient.put(url,product);
     },
     getProductByCate(cate_id){
@@ -33,7 +29,19 @@ const ProductApi = {
         return axiosClient.get(url);
     },
     getProductByTextSearch(input){
-        const url = `/products?name_like=${input}`;
+        const url = `/products/${input}`;
+        return axiosClient.get(url);
+    },
+    getProductByPrice(gte,lte){
+        const url = `/products/price?gte=${gte}&lte=${lte}`;
+        return axiosClient.post(url);
+    },
+    getProductPagination(page){
+        const url = `/products?page=${page}`;
+        return axiosClient.post(url);
+    },
+    countProduct(){
+        const url = `/countproduct`;
         return axiosClient.get(url);
     }
 }
